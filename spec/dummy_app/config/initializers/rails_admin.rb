@@ -3,4 +3,8 @@ RailsAdmin.config do |c|
     include_all_fields
     field :color, :color
   end
+
+  c.model FansTeam do
+  	include_all_fields
+  end
 end

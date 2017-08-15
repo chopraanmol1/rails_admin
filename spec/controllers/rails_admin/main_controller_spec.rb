@@ -140,6 +140,36 @@ describe RailsAdmin::MainController, type: :controller do
     end
   end
 
+  describe '#list_entries called from view for model w/o primary_key' do
+    before do
+      @fans_teams = FactoryGirl.create_list(:fans_team, 21)
+      controller.params = {model_name: 'fans_teams'}
+    end
+
+    it 'paginates' do
+      expect(controller.list_entries(RailsAdmin.config(FansTeam), :index, nil, false).to_a.length).to eq(21)
+      expect(controller.list_entries(RailsAdmin.config(FansTeam), :index, nil, true).to_a.length).to eq(20)
+    end
+  end
+
+  describe '#list_entries called from view with kaminari custom param_name for model w/o primary_key' do
+    before do
+      @fans_teams = FactoryGirl.create_list(:fans_team, 21)
+      controller.params = {model_name: 'fans_teams'}
+      Kaminari.config.param_name = :pagina
+    end
+
+    after do
+      Kaminari.config.param_name = :page
+    end
+
+    it 'paginates' do
+      expect(controller.list_entries(RailsAdmin.config(FansTeam), :index, nil, false).to_a.length).to eq(21)
+      expect(controller.list_entries(RailsAdmin.config(FansTeam), :index, nil, true).to_a.length).to eq(20)
+    end
+  end
+
+
   describe '#list_entries called with bulk_ids' do
     before do
       @teams = FactoryGirl.create_list(:team, 21)

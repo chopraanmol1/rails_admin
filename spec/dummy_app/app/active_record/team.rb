@@ -3,6 +3,7 @@
 class Team < ActiveRecord::Base
   has_many :players, -> { order :id }, inverse_of: :team
   has_and_belongs_to_many :fans
+  has_many :fans_teams, foreign_key: :team_id
   has_many :comments, as: :commentable
 
   validates_numericality_of :division_id, only_integer: true
